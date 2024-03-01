@@ -2,6 +2,8 @@ import React, { Component,useState } from 'react';
 import TilesLayout from './TilesLayout';
 import TilesLayoutLeft from './TilesLayoutLeft';
 import { Button} from 'react-bootstrap';
+import useWebSocket from 'react-use-websocket';
+
 
 
 
@@ -10,6 +12,9 @@ import { HexGrid, Layout, Hexagon, Text, Pattern, Path, Hex,HexUtils,GridGenerat
 import configs from './configurations';
 
 import './App.css';
+const WS_URL = 'ws://localhost8082';
+
+
 
 // const theme = {
 //   blue: {
@@ -27,6 +32,7 @@ import './App.css';
 
 
 class App extends Component {
+  
   constructor(props) {
     super(props);
     //const hexagons = GridGenerator.hexagon(2);
@@ -36,13 +42,15 @@ class App extends Component {
     // this.state = { hexagons };
   }
 
+
+
   // const buttonStyle = {
   //   fontFamily: 'OCR A Std', // Change the font family here
   //   fontSize: '16px', // Optionally adjust font size
   //   fontWeight: 'bold', // Optionally adjust font weight
   // };
 
-  // const [moveClicked, setMoveClicked] = useState(false);
+  //const [moveClicked, setMoveClicked] = useState(false);
     //Helpgul in learning props
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // onDrop you can read information of the hexagon that initiated the drag
@@ -145,6 +153,13 @@ class App extends Component {
 
 
     }
+    
+    handleHtmlChange(e) {
+      sendJsonMessage({
+        type: 'contentchange',
+        content: e.target.value
+      });
+    }
 
     //Might be helpful in debugging --------> console.log(5 + 6);
     //return(<Path start={new Hex(0, 0, 0)} end={new Hex(-2, 0, 1)} />);
@@ -183,10 +198,18 @@ class App extends Component {
     //   alert('You clicked me!');
     // }
   render() {
+    useWebSocket(WS_URL, {
+      onOpen: () => {
+        console.log('WebSocket connection established.');
+      }
+    });
+
+    
     return (
-  
-     
+             
       <div>
+        <DefaultEditor value={html} onChange={handleHtmlChange} />
+        
         {/* How to use inline style ------> style={{  }} */}
         {/*call a button funtion like this onClick={clickMe} */}
         <Button
