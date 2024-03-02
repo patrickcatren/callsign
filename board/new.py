@@ -433,8 +433,58 @@ def detect_combat():
                         targs.append(j)
             p2_targs.append(targs)
 
+    resolve([p1_targs,p2_targs])
+    # return[p1_targs,p2_targs]
 
-    return [p1_targs,p2_targs]
+
+def resolve(battles):
+    battles[0]
+    battles[1]
+    p1_bats = []
+    p2_bats = []
+
+    if len(battles[0]) > 0:
+        for i,x in enumerate(battles[0]):
+            print("Targets for p1's ", x[0] , "are ", end=" ")
+            for j,z in enumerate(x):
+                if j != 0 and j != len(x)-1:
+                    print(z,end=", ")
+                elif j!= 0 and j == len(x)-1:
+                    print(z,end="")
+                    print()
+
+                    check = 0
+                    while check == 0:
+                        tar = input("Please pick a target to attack for your unit")
+                        if tar in x and tar != x[0]:
+                            bat = [x[0],tar]
+                            p1_bats.append(bat)
+                            check = 1
+                        else:
+                            print("invalid unit, try again")
+
+    if len(battles[1]) > 0:
+        for i,x in enumerate(battles[1]):
+            print("Targets for p2's ", x[0] , "are ", end=" ")
+            for j,z in enumerate(x):
+                if j != 0 and j != len(x)-1:
+                    print(z,end=", ")
+                elif j!= 0 and j == len(x)-1:
+                    print(z,end="")
+                    print()
+
+                    check = 0
+                    while check == 0:
+                        tar = input("Please pick a target to attack for your unit")
+                        if tar in x and tar != x[0]:
+                            bat = [x[0],tar]
+                            p2_bats.append(bat)
+                            check = 1
+                        else:
+                            print("invalid unit, try again")
+
+    bats = [p1_bats,p2_bats]
+    print(bats)
 
 
 board = [r1, r2, r3, r4, r5]
@@ -691,24 +741,7 @@ while gameState == 1:
         oneUnits -= des[0]
         twoUnits -= des[1]
 
-        targets = detect_combat()
-        # print(targets[0])
-        # print(targets[1])
-        if len(targets[0]) > 0:
-            for i,x in enumerate(targets[0]):
-                print("Targets for p1's ", x[0] , "are ", end=" ")
-                for j,z in enumerate(x):
-                    if j != 0:
-                        print(z,end=", ")
-                print()
+        detect_combat()
 
-        if len(targets[1]) > 0:
-            for i,x in enumerate(targets[1]):
-                print("Targets for p2's ", x[0] , "are ", end=" ")
-                for j,z in enumerate(x):
-                    if j != 0:
-                        print(z,end=", ")
-                print()
-        print()
 
     printBoard(board)
