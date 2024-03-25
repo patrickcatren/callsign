@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plane Animation</title>
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
+    grid-template-rows: repeat(5, 100px);
+    gap: 10px;
+  }
+
+  .grid-cell {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    position: relative;
+  }
+
+  .plane {
+    width: 50px;
+    height: 50px;
+    background-image: url('/home/mids/m244104/Desktop/IC470/team-11/server/public/p1fighter1.png');
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    transition: all 2s ease-in-out;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid">
+  <div class="grid-cell" id="cell1">
+    <div class="plane" id="plane"></div>
+  </div>
+  <div class="grid-cell" id="cell2"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+</div>
+
+<script>
+  const plane = document.getElementById('plane');
+  const cell1 = document.getElementById('cell1');
+  const cell2 = document.getElementById('cell2');
+
+  setTimeout(() => {
+    const cell1Rect = cell1.getBoundingClientRect();
+    const cell2Rect = cell2.getBoundingClientRect();
+
+    plane.style.left = (cell2Rect.left - cell1Rect.left) + 'px';
+    plane.style.top = (cell2Rect.top - cell1Rect.top) + 'px';
+  }, 1000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <link rel="stylesheet" href="back.css">
+    <link rel="stylesheet" href="mod.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Allerta Stencil' rel='stylesheet'>
+    <style>
+      body {font-family:"Allerta Stencil" ;}
+        /* body{
+            background-image: url('https://i.redd.it/dfv356i48az91.gif');
+            background-size: cover ;
+            /* 100vw 100vh */
+            
+            /* padding:0;
+            margin:0; 
+        } */ 
+        .center {
+            padding: 280px 0;
+            /* border: 10px solid green; */
+            text-align: center;
+        }
+        .button {
+          border: none;
+          color: white;
+          padding: 16px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-family: "Allerta Stencil";
+          font-size: 16px;
+          margin: 4px 2px;
+          transition-duration: 0.4s;
+          cursor: pointer;
+          
+        }
+        
+        .button1 {
+          background-color: rgb(0, 0, 0); 
+          color: rgb(255, 255, 255); 
+          border: 2px solid #4CAF50;
+        }
+        
+        .button1:hover {
+          background-color: #4CAF50;
+          color: white;
+        }
+        
+        .button2 {
+          background-color: rgb(0, 0, 0); 
+          color: rgb(255, 255, 255); 
+          border: 2px solid #d23d13;
+        }
+        
+        .button2:hover {
+          background-color: #d23d13;
+          color: white;
+        }
+        .button3 {
+          background-color: rgb(0, 0, 0); 
+          color: rgb(255, 255, 255); 
+          border: 2px solid #008CBA;
+        }
+        
+        .button3:hover {
+          background-color: #008CBA;
+          color: white;
+        }
+        /* p{
+            color:red;
+            font-size:200px;
+            font-family: "Allerta Stencil"  
+            
+        } */
+
+        .glow {
+          font-size: 100px;
+          color: #fff;
+          text-align: center;
+          animation: glow 1s ease-in-out infinite alternate;
+        }
+
+        @-webkit-keyframes glow {
+          from {
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #de0b2e, 0 0 40px #de0b2e, 0 0 50px #de0b2e, 0 0 60px #de0b2e, 0 0 70px #de0b2e;
+          }
+          
+          to {
+            text-shadow: 0 0 20px #fff, 0 0 30px #de0b2e, 0 0 40px #de0b2e, 0 0 50px #de0b2e, 0 0 60px #de0b2e, 0 0 70px #de0b2e, 0 0 80px #de0b2e;
+          }
+        }
+        
+        .popup {
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+
+        /* The actual popup */
+        .popup .popuptext {
+          visibility: hidden;
+          width: 160px;
+          background-color: #555;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 8px 0;
+          position: absolute;
+          z-index: 1;
+          bottom: 125%;
+          left: 50%;
+          margin-left: -80px;
+        }
+
+        /* Popup arrow */
+        .popup .popuptext::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          margin-left: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: #555 transparent transparent transparent;
+        }
+
+        /* Toggle this class - hide and show the popup */
+        .popup .show {
+          visibility: visible;
+          -webkit-animation: fadeIn 1s;
+          animation: fadeIn 1s;
+        }
+
+        /* Add animation (fade in the popup) */
+        @-webkit-keyframes fadeIn {
+          from {opacity: 0;} 
+          to {opacity: 1;}
+        }
+
+        @keyframes fadeIn {
+          from {opacity: 0;}
+          to {opacity:1 ;}
+        }            
+        </style>
+</head>
+<body>
+<!-- <audio loop autoplay>
+    <source src="music1.mp3" type="audio/mp3">
+</audio> -->
+
+<audio controls autoplay>
+  <!-- <source src="music1.mp3" type="audio/ogg"> -->
+  <source src="music1.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+
+<!-- <audio autoplay loop src="music1.mp3"></audio> -->
+
+<!-- <iframe src="music1.mp3" allow="autoplay" style="display:none" id="iframeAudio">
+</iframe>  -->
+
+<div id = "SLIDE_BG">
+<!-- Content will go here -->
+
+<div class="center">
+    <p class="glow" font-size:200px;> Callsign </p>
+<button class="button button1" onclick="location.href='/queue.html';">QUICK PLAY</button>
+<button class="button button2" onclick="location.href='/private.html';">JOIN ROOM</button>
+<button class="button button3"  id="how" >HOW TO PLAY</button>
+<!-- <button class="button button3"  onclick="location.href='file:///home/mids/m244104/Desktop/IC470/index.php';" >Test Launch</button> -->
+
+
+
+<div id="modal1" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p> <b>HOW TO PLAY</b> </p>
+    <p style="text-align:left;"><b>Setup</b>: Cut out each unit along the dotted lines (left and give each player the six units matching their color. 
+        Set the damage counters aside. </p>
+        
+        <p style="text-align:left;"><b>Objective</b>: Win by destroying the opposing carrier by delivering 2 hits. Place a damage counter on the carrier for each successful hit.</p>
+        
+        <p style="text-align:left;"> <b>Order of Play</b>: Each turn, players roll 1d6. 
+        Higher number has initiative and goes first. Each player does ONE of the following actions: 
+        <li style="text-align:left;"><b>Generate one unit</b>. Place a unit adjacent to or on top of your carrier. </li> 
+        <li style="text-align:left;"><b>Move one unit one hex</b>. Units can stack with no limit, but this action only moves one unit.</li>
+        <li style="text-align:left;"><b>Activate a unit's special ability</b>.</li>
+        <li style="text-align:left;"><b>Regenerate unit</b>. Roll 1d6. If the result is 5 or less, place one destroyed unit adjacent or 
+        on top of the carrier.</li></p>
+        
+        <p style="text-align:left;"><b>Combat</b>: After both players have finished their actions, combat occurs automatically. The initiative player chooses combat order. Each unit may only engage in combat ONCE per turn. 
+         there are multiple eligible targets within range, then the attacker chooses its target for combat.</p>
+                 
+         <p style="text-align:left;"><b>Evasion</b>: The Defender may Evade. Roll 1d6. On a 1, move Defender to a hex without an enemy unit with a Combat Value and the Engagement ends.
+         Otherwise, continue Engagement. If it cannot retreat safely, destroy the unit.</p> 
+         
+         <p style="text-align:left;"><b>Resolving Combat Engagements</b>: Select one unit as the Attacker and one unit within its Combat Range as the Defender. If the Attacker and Defender are engaging one another, 
+         roll dice simultaneously. If the roll is equal to or less than the unit's Combat Value, the opposing unit is destroyed (remove from the board and place in the appropriate Regeneration Box). All units can only take one hit. In a turn, a unit destroyed
+          in combat may still roll for its own combat against its target - before being sent to the Regeneration Box. ie.; If A destroys B, and B is targeting C - then B can still roll to destroy C before going to the Regeneration Box. 
+        </p>
+        <p style="text-align:left;"><b>Special Rules</b>:
+           A unit further from a fuel source than its Fuel Range is destroyed at the end of the turn. Available fuel sources: Tanker (TKR) or the carrier. If a unit has (c) for its Fuel Range, it does not need a fuel source. When counting range for combat or 
+           fuel, the occupied hex is a range of zero and the adjacent hex is a range of 1. A Bomber (BMR) has a combat value of 1 against all units except the opponent's carrier.</p> 
+        <p style="text-align:left;"><b>C2 Special Ability</b>: Select up to 2 of your units within the Special Effect Range. 
+           Move the selected units one hex each. 
+         <p style="text-align:left;"><b>Jam Special Ability</b>: Roll 1d6. On a 4 or less, reduces all enemy combat values by 2 against units in its hex. This ability is automatic when enemy units engages in combat against its hex. Roll for this ability 
+           prior to the Attacker's roll.</p>
+           
+          <p style="text-align:left;"><b>Glossary</b>: 1d6 - one six-sided die (Image of d6) Unit - one of the six aircraft available to each player</p></p>
+
+          <img src="call.png" >
+          <!-- style="height:300px" -->
+  </div>
+
+</div>
+
+<!-- Script provided by w3schools -->
+<script>
+  // Get the modal
+  var modal = document.getElementById("modal1");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("how");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+  
+
+
+
+<!-- <button class="button button3> HOW TO PLAY </button> -->
+
+
+</div>
+</div>
+
+
+
+
+</body>
+</html>

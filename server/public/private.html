@@ -1,68 +1,216 @@
+<!doctype html>
+
 <html>
-<head>
+<head lang="en">
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="hex.css">
+  <title> CallSign </title>
+  <style>
+    /* Set the margin and padding of the body to 0 */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Create two unequal columns that floats next to each other */
+    .column {
+      float: left;
+      padding: 10;
+    }
+
+    .left {
+      width: 50%;
+    }
+
+    .right {
+      width: 50%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+      </style>
 </head>
 <body>
-  <form id="input-form">
-    <label id="inputLabel" for="message">Enter Join Code:</label>
-    <input type="text" id="message" name="message">
-    <input type="submit" value="Send">
-  </form>
-  <form id="die-roll">
-    <input type="submit" value="Roll">
-  </form>
-  <form id="creater">
-    <input type="submit" value="Create">
-  </form>
-  <form id="joiner">
-    <input type="submit" value="Join">
-  </form>
-  <form id="autojoiner">
-    <input type="submit" value="AutoJoin">
-  </form>
-  <form id="select-unit">
-    <label for="units">Choose a Unit:</label>
-    <select name="units" id="units">
-      <option value="fighter">Fighter</option>
-      <option value="bomber">Bomber</option>
-      <option value="tanker">Tanker</option>
-      <option value="jammer">Jammer</option>
-      <option value="C2">C2</option>
-    </select>
-    <input type="submit" value="Generate">
-  </form>
-  <div id="lobbyID">Lobby ID:</div>
-  <div id="messages"></div>
-  <div id="rolls"></div>
-  <div id="unit_msg"></div>
+  <header id = "top">
+    <!-- Header content goes here -->
+    <div style="text-align:center; background-color: #b20aeaed; width:100%">
+      <h1 style="color:white">C A L L S I G N</h1>
+    </div>
+  </header>
+  <div class="row">
+    <div class="column left">
+      <h2>Game Board</h2>
+      <p><ul class="hex-grid__list">
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="A,1" onclick="javascript:clicked('A,1')" style="background-color: #0b54f2d8">
+            <img src="bluecarrier.png" width="60">
+            </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="A,2" onclick="javascript:clicked('A,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="A,3" onclick="javascript:clicked('A,3')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="A,4" onclick="javascript:clicked('A,4')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="A,5" onclick="javascript:clicked('A,5')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="A,6" onclick="javascript:clicked('A,6')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="B,1" onclick="javascript:clicked('B,1')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="B,2" onclick="javascript:clicked('B,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="B,3" onclick="javascript:clicked('B,3')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="B,4" onclick="javascript:clicked('B,4')"> </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="B,5" onclick="javascript:clicked('B,5')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="B,6" onclick="javascript:clicked('B,6')" ></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="C,1" onclick="javascript:clicked('C,1')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="C,2" onclick="javascript:clicked('C,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="C,3" onclick="javascript:clicked('C,3')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="C,4" onclick="javascript:clicked('C,4')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="C,5" onclick="javascript:clicked('C,5')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="C,6" onclick="javascript:clicked('C,6')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="D,1" onclick="javascript:clicked('D,1')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="D,2" onclick="javascript:clicked('D,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="D,3" onclick="javascript:clicked('D,3')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="D,4" onclick="javascript:clicked('D,4')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="D,5" onclick="javascript:clicked('D,5')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" id="D,6" onclick="javascript:clicked('D,6')" style="background-color: rgba(227, 20, 20, 0.861)">
+              <img src="bluecarrier.png" width="60">
+            </div>
+        </li>
+    </ul></p>
+    </div>
+
+    <div class="column right" style="background-color:#5487bd4c;">
+      <h2>Controls</h2>
+      <p>  <form id="input-form">
+        <label id="inputLabel" for="message">Enter Join Code:</label>
+        <input type="text" id="message" name="message">
+        <input type="submit" value="Send">
+      </form>
+      <!-- <form id="die-roll">
+        <input type="submit" value="Roll">
+      </form> -->
+      <br>
+      <div>
+        <input id="creater" type="submit" value="Create">
+        <input id="joiner" type="submit" value="Join">
+        <input id="autojoiner" type="submit" value="AutoJoin">
+      </div>
+      <br>
+      <form id="select-move">
+        <label for="moves">Choose an Action:</label>
+        <select name="moves" id="moves">
+          <option value="gen">Generate</option>
+          <option value="regen">Regenerate</option>
+          <option value="move">Move</option>
+          <option value="jam">Jam</option>
+          <option value="relocate">Relocate</option>
+        </select>
+        <input type="submit" value="Select Move">
+      </form>
+      <form id="select-unit"></form>
+      <form id="select-attack"></form>
+      <div id="select-tile"></div>
+      <form id="ender">
+      </form>
+      <div id="lobbyID">Lobby ID:</div>
+      <div> REGENERATION BLUE
+        <div class="row" id="E,1" style="border: 1px solid;"><img src=""></div>
+      </div>
+      <div> REGENERATION RED
+        <div class="row" id="E,5" style="border: 1px solid;"><img src=""></div>
+      </div>
+      <div id="messages">Messages:<br></div>
+      <!-- <div id="rolls"></div> -->
+      <div id="unit_msg"></div></p>
+    </div>
+  </div>
+  <br><br><br>
+
   <script>
     const webSocket = new WebSocket('ws://localhost:8082/');
+    const turnMsg = {
+      type: "end of turn",
+      text: "",
+    };
+    let evade = 0;
+    let move = 0;
+    let relocate = 0;
+    let relnum = 0;
     webSocket.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       switch (msg.type) {
         case "message":
           console.log(msg.text)
-          document.getElementById('messages').innerHTML += 
+          document.getElementById('messages').innerHTML +=
           'Message from server: ' + msg.text + "<br>";
           break;
-         case "roll":
-          document.getElementById('rolls').innerHTML += 
-          msg.text + "<br>";
-           break;
          case "created":
-          document.getElementById('lobbyID').innerHTML += 
+          document.getElementById('lobbyID').innerHTML +=
            msg.text + "<br>";
-           document.getElementById('inputLabel').innerHTML = 
+           document.getElementById('inputLabel').innerHTML =
            "Enter Message:";
-           break;
            break;
          case "joined":
-          document.getElementById('lobbyID').innerHTML += 
+          document.getElementById('lobbyID').innerHTML +=
            msg.text + "<br>";
-           document.getElementById('inputLabel').innerHTML = 
+           document.getElementById('inputLabel').innerHTML =
            "Enter Message:";
            break;
+         case "player-num":
+          if(msg.text.includes("blue")){
+            document.getElementById("top").innerHTML = '<div style="text-align:center; color:white; background-color: #2e28d1ed; width:100%"><h1>C A L L S I G N</h1><h2>You are the ' + msg.text + ' player!</h2></div>';
+          }
+          else if(msg.text.includes("red")){
+            document.getElementById("top").innerHTML = '<div style="text-align:center; color:white; background-color: #ea0a0aed; width:100%"><h1>C A L L S I G N</h1><h2>You are the ' + msg.text + ' player!</h2></div>';
+          }
+            break;
          case "opp":
-          document.getElementById('messages').innerHTML += 
+          document.getElementById('messages').innerHTML +=
            "Opponent Joined <br>";
            opp();
            break;
@@ -72,11 +220,86 @@
          case "unit":
           document.getElementById('unit_msg').innerHTML +=
           msg.text + "<br>";
+          break;
+        case "start":
+        document.getElementById('messages').innerHTML +=
+           "Received Start Message from server from Py <br>";
+           break;
+        case "turn-result":
+          var result = msg.text.split("|");
+          for(let j = 1; j < 7; j++){
+              document.getElementById('A,'+j).innerHTML=
+              '<img src="">';
+              document.getElementById('B,'+j).innerHTML=
+              '<img src="">';
+              document.getElementById('C,'+j).innerHTML=
+              '<img src="">';
+              document.getElementById('D,'+j).innerHTML=
+              '<img src="">';
+            }
+            document.getElementById("E,1").innerHTML=
+            '<img src="">';
+            document.getElementById("E,5").innerHTML=
+            '<img src="">';
+            document.getElementById('A,1').innerHTML=
+              '<img src="bluecarrier.png"  width="60">';
+            document.getElementById('D,6').innerHTML=
+              '<img src="bluecarrier.png"  width="60">';
+          for(let i = 0; i < 12; i++){
+            var location = result[i].split(',');
+            if(location[2] != 0){
+              document.getElementById(location[2]+','+location[3]).innerHTML+=
+              '<img src="'+location[0]+location[1]+'.png" width="30">';
+            }
+          }
+          break;
+          case "combat":
+              document.getElementById('select-attack').innerHTML =
+              '<label for="attack">Choose a Unit to Attack:</label><select name="attack" id="attack"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option><option value="carrier">Carrier</option></select><input type="submit" value="Select">';
+          document.getElementById('messages').innerHTML += msg.text;
+           break;
+           case "evade":
+           document.getElementById('select-tile').innerHTML = "You are in attacking range of an enemy unit! Select a tile to evade to.";
+           evade = 1;
+           break;
+           case "victor":
+           var winner = msg.text.split(":")
+           window.alert("Player "+winner+ " won the game");
       }
     };
     webSocket.addEventListener("open", () => {
       console.log("We are connected");
     });
+    function clicked(name){
+      if(evade == 1){
+        const inputMessage = {
+        type: "evade",
+        text: name,
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      document.getElementById('select-tile').innerHTML = "";
+      evade = 0;
+      event.preventDefault();
+      }
+      if(move == 1){
+        document.getElementById('ender').innerHTML = '<input type="submit" value="End Turn">';
+        if(relocate){
+          apart = name.split(",");
+          name = apart[0] + "|" + apart[1] + "|";
+          if(relnum == 0){
+          document.getElementById('select-unit').innerHTML =
+           '<label for="units">Choose a Unit:</label><select name="units" id="units"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option></select><input type="submit" value="Select">';
+           relnum = 1
+          }
+          }
+      
+      turnMsg.text += name;
+      document.getElementById('select-tile').innerHTML = "";
+      move = 0;
+      event.preventDefault();
+      }
+    }
     function sendMessage(event) {
       const inputMessage = {
         type: "message",
@@ -131,31 +354,66 @@
       inputMessage.value = "";
       event.preventDefault();
     }
-    //FOR ROLLING
-    function rollDie(event) {
-      const inputMessage = {
-        type: "roll",
-        text: Math.floor(Math.random() * 6),
-      };
-      webSocket.send(JSON.stringify(inputMessage));
-      inputMessage.value = "";
+    function end(event){
+      document.getElementById('select-move').innerHTML = '<label for="moves">Choose an Action:</label><select name="moves" id="moves"><option value="gen">Generate</option><option value="regen">Regenerate</option><option value="move">Move</option><option value="jam">Jam</option><option value="relocate">Relocate</option></select><input type="submit" value="Select Move">';
+      //window.alert(turnMsg.text);
+      webSocket.send(JSON.stringify(turnMsg));
+      turnMsg.text = "";
+      document.getElementById('select-unit').innerHTML = "";
+      document.getElementById('ender').innerHTML = "";
+      relnum = 0;
+      relocate = 0;
+      event.preventDefault();
+    }
+    // first step: choose the type of move you want
+    function chooseMove(event){
+      if(document.getElementById('moves').value == "jam"){
+        turnMsg.text += document.getElementById('moves').value;
+        document.getElementById('ender').innerHTML = '<input type="submit" value="End Turn">';
+      }
+      else{
+        document.getElementById('select-unit').innerHTML =
+           '<label for="units">Choose a Unit:</label><select name="units" id="units"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option></select><input type="submit" value="Select">';
+        turnMsg.text += document.getElementById('moves').value + ",";
+      }
+      if(document.getElementById('moves').value == "relocate"){
+        relocate = 1;
+      }
+      //window.alert(turnMsg.text);
+      document.getElementById('select-move').innerHTML = "";
       event.preventDefault();
     }
     function chooseUnit(event){
+      move = 1;
+      document.getElementById('select-tile').innerHTML = "Now select a tile!";
+      if(relocate){
+        turnMsg.text += document.getElementById('units').value + "|";
+      }
+      else{
+        turnMsg.text += document.getElementById('units').value + ",";
+      }
+      //window.alert(turnMsg.text);
+      document.getElementById('select-unit').innerHTML = "";
+      event.preventDefault();
+    }
+    function chooseAttack(event){
       const inputMessage = {
-        type: "unit",
-        text: document.getElementById('units').value,
+        type: "attack",
+        text: document.getElementById('attack').value,
       };
       webSocket.send(JSON.stringify(inputMessage));
       inputMessage.value = "";
+      document.getElementById('select-attack').innerHTML = "";
       event.preventDefault();
     }
     document.getElementById('input-form').addEventListener('submit', sendMessage);
-    document.getElementById('die-roll').addEventListener('submit', rollDie);
-    document.getElementById('joiner').addEventListener('submit', join);
-    document.getElementById('autojoiner').addEventListener('submit', autojoin);
-    document.getElementById('creater').addEventListener('submit', create);
+    document.getElementById('joiner').addEventListener('click', join);
+    document.getElementById('ender').addEventListener('submit', end);
+    document.getElementById('autojoiner').addEventListener('click', autojoin);
+    document.getElementById('creater').addEventListener('click', create);
+    document.getElementById('select-move').addEventListener('submit', chooseMove);
     document.getElementById('select-unit').addEventListener('submit', chooseUnit);
+    document.getElementById('select-attack').addEventListener('submit', chooseAttack);
   </script>
 </body>
 </html>

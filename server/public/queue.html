@@ -1,36 +1,189 @@
+<!doctype html>
+
 <html>
-<head> 
+<head lang="en">
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="hex.css">
+  <title> CallSign </title>
+  <style>
+    /* Set the margin and padding of the body to 0 */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Set the margin and padding of the header to 0 */
+    header {
+      margin: 0;
+      padding: 0;
+      background-color: #2e28d1ed;
+    }
+
+    /* Create two unequal columns that floats next to each other */
+    .column {
+      float: left;
+      padding: 10;
+    }
+
+    .left {
+      width: 50%;
+    }
+
+    .right {
+      width: 50%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+      </style>
 </head>
 <body>
-  <form id="input-form">
-    <label for="message">Enter Message:</label>
-    <input type="text" id="message" name="message"><br><br>
-    <input type="submit" value="Send">
-    <br><br>
-  </form>
-  <form id="die-roll">
-    <input type="submit" value="Roll">
-    <br><br>
-  </form>
-<form id="select-unit">
-  <label for="units">Choose a Unit:</label>
-  <select name="units" id="units">
-    <option value="fighter">Fighter</option>
-    <option value="bomber">Bomber</option>
-    <option value="tanker">Tanker</option>
-    <option value="jammer">Jammer</option>
-    <option value="C2">C2</option>
-  </select>
-  <input type="submit" value="Generate">
-</form>
-<div id="messages"></div>
-<br>
-<div id="rolls"></div>
-<br>
-<div id="unit_msg"></div>
+  <header>
+    <div style="text-align:center; width:100%">
+      <h1>C A L L S I G N</h1>
+    </div>
+  </header>
+  <div class="row">
+    <div class="column left">
+      <h2>Game Board</h2>
+      <p><ul class="hex-grid__list">
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('A,1')" style="background-color: #0b54f2d8">
+            <img src="jammer.png" width="50">
+            </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('A,2')">A,2</div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('A,3')">
+              <img src="tanker.png" width="50">
+            </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('A,4')">A,4</div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('A,5')">
+              <img src="bomber.png" width="50">
+            </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('A,6')">A,6</div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('B,1')">
+              <img src="fighter.png" width="50">
+            </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('B,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('B,3')">B,3</div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('B,4')"> </div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('B,5')">B,5</div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content"onclick="javascript:clicked('B,6')" >B,6</div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('C,1')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('C,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('C,3')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('C,4')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('C,5')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('C,6')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('D,1')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('D,2')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('D,3')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('D,4')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('D,5')"></div>
+        </li>
+        <li class="hex-grid__item">
+            <div class="hex-grid__content" onclick="javascript:clicked('D,6')" style="background-color: rgba(227, 20, 20, 0.861)"></div>
+        </li>
+    </ul></p>
+    </div>
 
+    <div class="column right" style="background-color:#5487bd4c;">
+      <h2> Controls</h2>
+      <form id="input-form">
+        <label id="inputLabel" for="message">Enter Join Code:</label>
+        <input type="text" id="message" name="message">
+        <input type="submit" value="Send">
+      </form>
+      <form id="die-roll">
+        <input type="submit" value="Roll">
+      </form>
+      <form id="creater">
+        <input type="submit" value="Create">
+      </form>
+      <form id="joiner">
+        <input type="submit" value="Join">
+      </form>
+      <form id="autojoiner">
+        <input type="submit" value="AutoJoin">
+      </form>
+      <form id="select-unit">
+        <label for="units">Choose a Unit:</label>
+        <select name="units" id="units">
+          <option value="fighter">Fighter</option>
+          <option value="bomber">Bomber</option>
+          <option value="tanker">Tanker</option>
+          <option value="jammer">Jammer</option>
+          <option value="C2">C2</option>
+        </select>
+        <input type="submit" value="Generate">
+      </form>
+      <div id="lobbyID">Lobby ID:</div>
+      <div id="messages"></div>
+      <div id="rolls"></div>
+      <div id="unit_msg"></div>
+    </div>
+  </div>
+  
+  <!-- The expanding grid (hidden by default) -->
+<div id="b1" class="containerTab" style="display:none;background:green">
+  <!-- If you want the ability to close the container, add a close button -->
+  <span onclick="this.parentElement.style.display='none'" class="closebtn">x</span>
+  <h2>Box 1</h2>
+</div>
+  
   <script>
-    const webSocket = new WebSocket('ws://localhost:8081/');
+    function clicked(name){
+    window.alert(name)
+    }
+
+    const webSocket = new WebSocket('ws://localhost:8082/');
     webSocket.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       switch (msg.type) {
@@ -39,14 +192,34 @@
           document.getElementById('messages').innerHTML += 
           'Message from server: ' + msg.text + "<br>";
           break;
-        case "roll":
+         case "roll":
           document.getElementById('rolls').innerHTML += 
           msg.text + "<br>";
            break;
-        case "unit":
+         case "created":
+          document.getElementById('lobbyID').innerHTML += 
+           msg.text + "<br>";
+           document.getElementById('inputLabel').innerHTML = 
+           "Enter Message:";
+           break;
+           break;
+         case "joined":
+          document.getElementById('lobbyID').innerHTML += 
+           msg.text + "<br>";
+           document.getElementById('inputLabel').innerHTML = 
+           "Enter Message:";
+           break;
+         case "opp":
+          document.getElementById('messages').innerHTML += 
+           "Opponent Joined <br>";
+           opp();
+           break;
+        case "left":
+           left();
+           break;
+         case "unit":
           document.getElementById('unit_msg').innerHTML +=
           msg.text + "<br>";
-
       }
     };
     webSocket.addEventListener("open", () => {
@@ -56,6 +229,51 @@
       const inputMessage = {
         type: "message",
         text: document.getElementById('message').value,
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      event.preventDefault();
+    }
+    function create(event) {
+      const inputMessage = {
+        type: "create",
+        text: " ",
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      event.preventDefault();
+    }
+    function join(event) {
+      const inputMessage = {
+        type: "join",
+        text: document.getElementById('message').value,
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      event.preventDefault();
+    }
+    function autojoin(event) {
+      const inputMessage = {
+        type: "autojoin",
+        text: "",
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      event.preventDefault();
+    }
+    function opp(event) {
+      const inputMessage = {
+        type: "opp",
+        text: " ",
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      event.preventDefault();
+    }
+    function left(event) {
+      const inputMessage = {
+        type: "left",
+        text: " ",
       };
       webSocket.send(JSON.stringify(inputMessage));
       inputMessage.value = "";
@@ -82,6 +300,9 @@
     }
     document.getElementById('input-form').addEventListener('submit', sendMessage);
     document.getElementById('die-roll').addEventListener('submit', rollDie);
+    document.getElementById('joiner').addEventListener('submit', join);
+    document.getElementById('autojoiner').addEventListener('submit', autojoin);
+    document.getElementById('creater').addEventListener('submit', create);
     document.getElementById('select-unit').addEventListener('submit', chooseUnit);
   </script>
 </body>

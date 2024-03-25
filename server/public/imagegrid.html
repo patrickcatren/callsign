@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Grid</title>
+<style>
+  .image-grid-wrapper{
+    border: 15px solid #101010;
+    border-radius: 8px;  
+    padding: 10px;
+    box-sizing: border-box;
+
+  }
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 2fr);
+    gap: 1px;
+  }
+  .image-grid img {
+    width: 50%;
+    height: auto;
+    cursor: pointer;
+    border: 4px solid #101010;
+    border-radius: 8px;  
+  }
+</style>
+</head>
+<body>
+<div class = "image-grid-wrapper">
+  <div class="image-grid">
+    <img src="fighter1.png" alt="Image 1" onclick="this.style.display = 'none'">
+    <img src="helo.jpg" alt="Image 2" onclick="this.style.display = 'none'">
+    <img src="jammer.png" alt="Image 3" onclick="this.style.display = 'none'">
+    <img src="tanker.png" alt="Image 4" onclick="this.style.display = 'none'">
+    <img src="bomber.png" alt="Image 5" onclick="this.style.display = 'none'">
+    <img src="fighter2.png" alt="Image 6" onclick="this.style.display = 'none'">
+  </div>
+</div>
+
+</body>
+</html>

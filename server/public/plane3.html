@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plane Animation</title>
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
+    grid-template-rows: repeat(5, 100px);
+    gap: 10px;
+  }
+
+  .grid-cell {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    position: relative;
+    cursor: pointer; /* Add cursor pointer to indicate clickable */
+  }
+
+  .plane {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Set z-index to make the plane appear above the grid squares */
+    transition: all 1s ease-in-out;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid">
+  <div class="grid-cell" id="cell1"></div>
+  <div class="grid-cell" id="cell2"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+  <div class="grid-cell"></div>
+</div>
+
+<button onclick="movePlane()">Move Plane</button>
+
+<script>
+  const plane = document.createElement('img');
+  plane.src = '/home/mids/m244104/Desktop/IC470/team-11/server/public/p1fighter1.png'; // URL of the plane image
+  plane.classList.add('plane');
+  document.body.appendChild(plane);
+
+  const cell2 = document.getElementById('cell2');
+
+  function movePlane() {
+    const cell2Rect = cell2.getBoundingClientRect();
+    plane.style.left = cell2Rect.left + 'px';
+    plane.style.top = cell2Rect.top + 'px';
+  }
+</script>
+
+</body>
+</html>

@@ -9,13 +9,13 @@
     backface-visibility: hidden;
     animation: slideBg 12s linear infinite 0s;
     animation-timing-function: ease-in-out;
-    background-image: url(https://i.redd.it/52jxwzle8az91.gif);
+    background-image: url('https://i.redd.it/dfv356i48az91.gif');
 
 }
 
 @keyframes slideBg{
     0%{
-        background-image: url(https://i.redd.it/52jxwzle8az91.gif);
+        background-image: url('https://i.redd.it/dfv356i48az91.gif');
     }
     25%{
         background-image: url(https://i.redd.it/w2wjsgr48az91.gif);

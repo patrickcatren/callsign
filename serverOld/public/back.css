@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+#SLIDE_BG{
+    width: 100%;
+    height: 100vh;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    backface-visibility: hidden;
+    animation: slideBg 12s linear infinite 0s;
+    animation-timing-function: ease-in-out;
+    background-image: url(https://i.redd.it/52jxwzle8az91.gif);
+
+}
+
+@keyframes slideBg{
+    0%{
+        background-image: url(https://i.redd.it/52jxwzle8az91.gif);
+    }
+    25%{
+        background-image: url(https://i.redd.it/w2wjsgr48az91.gif);
+    }
+    50%{
+        background-image: url(https://i.redd.it/cy496mx58az91.gif);
+    }
+    75%{
+        background-image: url(https://i.redd.it/22txa9pb8az91.gif);
+    }
+    100%{
+        background-image: url(https://i.redd.it/bfrbkb6a8az91.gif);
+    }
+}
