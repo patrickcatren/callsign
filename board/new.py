@@ -15,7 +15,7 @@ e5 = ["E", 1, 2, 3, 4, 5, 6]
 pieces = dict({"p1_tanker": [0,0], "p1_bomber": [0,0], "p1_jammer": [0,0], "p1_comms": [0,0], "p1_fighter1": [0,0], "p1_fighter2": [0,0],
 "p2_tanker": [0,0], "p2_bomber": [0,0], "p2_jammer": [0,0], "p2_comms": [0,0], "p2_fighter1": [0,0], "p2_fighter2": [0,0]})
 
-tiles = [("A",1),("A",2),("A",3),("A",4),("A",5),("A",6),("B",1),("B",2),("B",3),("B",4),("B",5),("B",6),("C",1),("C",2),("C",3),("C",4),("C",5),("C",6),("D",1),("D",2),("D",3),("D",4),("D",5),("D",6)]
+tiles = [["A",1],["A",2],["A",3],["A",4],["A",5],["A",6],["B",1],["B",2],["B",3],["B",4],["B",5],["B",6],["C",1],["C",2],["C",3],["C",4],["C",5],["C",6],["D",1],["D",2],["D",3],["D",4],["D",5],["D",6]]
 movements = 0
 
 board = [r1, r2, r3, r4, r5]
@@ -43,21 +43,26 @@ class player:
             r4[column] = "B"
             self.row = "D"
         self.column = column
-
+        self.health = 2
         self.tanker = aircraft("tanker", [0,0], int(name), 0, 0, 100)
         self.bomber = aircraft("bomber", [0,0], int(name), 1, 2, 100)
         self.jammer = aircraft("jammer", [0,0], int(name), 0, 0, 2)
-        self.comms = aircraft("comms", [0,0], int(name), 0, 3, 100)
+        self.comms = aircraft("comms", [0,0], int(name), 0, 3, 2)
         self.fighter1 = aircraft("fighter", [0,0], int(name), 3, 1, 2)
         self.fighter2 = aircraft("fighter", [0,0], int(name), 3, 1, 2)
 
 
-def genUnit(pos, row, column):
+def genUnit(turn,pos, row, column):
     temp = [row,column]
     if pos != [0,0]:
         return False
-    if (temp != ["A",1] and temp != ["A",2] and temp != ["B",1] and temp != ["D",6] and temp != ["D",5] and temp != ["C",6]):
-        return False
+
+    if turn == 1:
+        if (temp != ["A",1] and temp != ["A",2] and temp != ["B",1]):
+            return False
+    else:
+        if (temp != ["D",6] and temp != ["D",5] and temp != ["C",6]):
+            return False
 
     # Adjusts Numbers on board
     orgCheck = ((row == "A" and column == 1) == False)
@@ -253,7 +258,7 @@ def relocate(turn, movers):
                 column = int(input("Input desired column for the " + x + " : "))
                 dist = calcDistance(ord(getattr(player1,x).pos[0])-64,getattr(player1,x).pos[1],ord(row)-64,column)
 
-                if dist > 2:
+                if dist > 1:
                     print("This movement exceeds the 2 tile limit, please enter a different tile")
                     continue
 
@@ -273,7 +278,7 @@ def relocate(turn, movers):
                 column = int(input("Input desired column for the " + x + " : "))
                 dist = calcDistance(ord(getattr(player2,x).pos[0])-64,getattr(player2,x).pos[1],ord(row)-64,column)
 
-                if dist > 2:
+                if dist > 1:
                     print("This movement exceeds the 2 tile limit, please enter a different tile")
 
                 check = True
@@ -328,7 +333,7 @@ def check_fuel():
         if homeDist > fr and tankDist > fr:
             decrease_unit(getattr(player1,x[3:]).pos[0],getattr(player1,x[3:]).pos[1])
             increase_unit("E",1)
-            pieces[x] = [5,1]
+            pieces[x] = ["E",1]
             getattr(player1,x[3:]).pos = ["E",1]
             p1_des +=1
             print(x, " is out of its fuel range!")
@@ -354,14 +359,14 @@ def check_fuel():
             print(x, " is out of its fuel range!")
     return (p1_des,p2_des)
 
-def evade(turn, unit):
-    if turn == 1:
-        temp = getattr(player1,unit).pos
+def evade(turn, unitPos):
+    if turn == 2:
+        temp = unitPos
         avail = []
         for x in tiles:
             if x[0] != temp[0] or x[1] != temp[1]:
                 dist = calcDistance(ord(temp[0])-64,temp[1],ord(x[0])-64,x[1])
-                print("Tile is ",x, " dist is ",dist)
+                # print("Tile is ",x, " dist is ",dist)
                 if dist == 1:
                     avail.append(x)
         # print(avail)
@@ -370,25 +375,24 @@ def evade(turn, unit):
             if player2.fighter1.pos == temp or player2.fighter2.pos == temp or player2.bomber.pos == temp:
                 avail.remove(x)
         # print(avail)
+        return avail
     else:
-        temp = getattr(player2,unit).pos
+        temp = unitPos
         avail = []
         for x in tiles:
             if x[0] != temp[0] or x[1] != temp[1]:
                 dist = calcDistance(ord(temp[0])-64,temp[1],ord(x[0])-64,x[1])
                 if dist == 1:
                     avail.append(x)
-
         # print(avail)
-
-
         for x in avail:
             temp = [x[0],x[1]]
             if player1.fighter1.pos == temp or player1.fighter2.pos == temp or player1.bomber.pos == temp:
                 avail.remove(x)
+        return avail
         # print(avail)
 
-def detect_combat():
+def detect_combat(turn):
     p1_stuff = list(pieces.keys())[0:6]
     p2_stuff = list(pieces.keys())[6:]
 
@@ -415,6 +419,8 @@ def detect_combat():
 
                     if dist <= ran:
                         targs.append(j)
+            if calcDistance(1,1,ord(pos[0])-64,pos[1]) <= ran:
+                targs.append("carrier")
             p1_targs.append(targs)
 
     for i in p2_atk:
@@ -431,60 +437,206 @@ def detect_combat():
 
                     if dist <= ran:
                         targs.append(j)
+            if calcDistance(1,1,ord(pos[0])-64,pos[1]) <= ran:
+                targs.append("carrier")
+
             p2_targs.append(targs)
 
-    resolve([p1_targs,p2_targs])
+    return resolve(turn,[p1_targs,p2_targs])
     # return[p1_targs,p2_targs]
 
-
-def resolve(battles):
+def resolve(turn,battles):
     battles[0]
     battles[1]
     p1_bats = []
     p2_bats = []
 
-    if len(battles[0]) > 0:
-        for i,x in enumerate(battles[0]):
-            print("Targets for p1's ", x[0] , "are ", end=" ")
-            for j,z in enumerate(x):
-                if j != 0 and j != len(x)-1:
-                    print(z,end=", ")
-                elif j!= 0 and j == len(x)-1:
-                    print(z,end="")
-                    print()
+    done = 0
+    round = 0
+    while done == 0:
+        if turn == 1:
+            round +=1
+            if len(battles[0]) > 0:
+                for i,x in enumerate(battles[0]):
+                    print("Targets for p1's ", x[0] , "are ", end=" ")
+                    for j,z in enumerate(x):
+                        if j != 0 and j != len(x)-1:
+                            print(z,end=", ")
+                        elif j!= 0 and j == len(x)-1:
+                            print(z,end="")
+                            print()
+                            if len(x) > 1:
+                                check = 0
+                                while check == 0:
+                                    tar = input("Please pick a target to attack for your unit")
+                                    if tar in x:
+                                        bat = [x[0],tar]
+                                        p1_bats.append(bat)
+                                        check = 1
+                                    else:
+                                        print("invalid unit, try again")
+        else:
+            round +=1
+            if len(battles[1]) > 0:
+                for i,x in enumerate(battles[1]):
+                    print("Targets for p2's ", x[0] , "are ", end=" ")
+                    for j,z in enumerate(x):
+                        if j != 0 and j != len(x)-1:
+                            print(z,end=", ")
+                        elif j!= 0 and j == len(x)-1:
+                            print(z,end="")
+                            print()
 
-                    check = 0
-                    while check == 0:
-                        tar = input("Please pick a target to attack for your unit")
-                        if tar in x and tar != x[0]:
-                            bat = [x[0],tar]
-                            p1_bats.append(bat)
-                            check = 1
-                        else:
-                            print("invalid unit, try again")
+                            if len(x) > 1:
+                                check = 0
+                                while check == 0:
+                                    tar = input("Please pick a target to attack for your unit")
+                                    if tar in x:
+                                        bat = [x[0],tar]
+                                        p2_bats.append(bat)
+                                        check = 1
+                                    else:
+                                        print("invalid unit, try again")
 
-    if len(battles[1]) > 0:
-        for i,x in enumerate(battles[1]):
-            print("Targets for p2's ", x[0] , "are ", end=" ")
-            for j,z in enumerate(x):
-                if j != 0 and j != len(x)-1:
-                    print(z,end=", ")
-                elif j!= 0 and j == len(x)-1:
-                    print(z,end="")
-                    print()
+        if turn == 1:
+            turn = 2
+        else:
+            turn = 1
 
-                    check = 0
-                    while check == 0:
-                        tar = input("Please pick a target to attack for your unit")
-                        if tar in x and tar != x[0]:
-                            bat = [x[0],tar]
-                            p2_bats.append(bat)
-                            check = 1
-                        else:
-                            print("invalid unit, try again")
+        if round == 2:
+            done = 1
+
 
     bats = [p1_bats,p2_bats]
-    print(bats)
+    # print(bats)
+    return fight(turn,bats)
+
+def fight(turn,battles):
+    p1_dead = []
+    p2_dead = []
+
+    done = 0
+    round = 0
+    while done == 0:
+        if turn == 1:
+            round+=1
+            for x in battles[0]:
+                roll = random.randrange(1,7)
+                nerf = 0
+                buff = 0
+                if getattr(player1,x[0]).pos == player2.jammer.pos and p2_jam == 1:
+                    nerf = 2
+                    # successful atk roll
+                if x[1] == "carrier" and x[0] == "bomber":
+                    buff = 4
+                print("player1's",x[0]," rolled a ",roll, " and needed below or equal to a ", getattr(player1,x[0]).combat_val - nerf+buff)
+                if roll <= getattr(player1,x[0]).combat_val - nerf + buff:
+                    if x[1] != "carrier":
+                        avail = evade(turn,getattr(player2,x[1]).pos)
+
+                        if len(avail) == 0 and getattr(player2,x[1]).combat_val == 0:
+                            p2_dead.append(x[1])
+                        elif len(avail) != 0:
+                            dod = True
+                            if getattr(player2,x[1]).combat_val != 0:
+                                ans = input("Evade?")
+                                if ans == "no":
+                                    dod = False
+                                    p2_dead.append(x[1])
+                            if dod:
+                                check = 0
+                                while check == 0:
+                                    print("Dodging for player2's ", x[1])
+                                    dodgeRow = input("Dodge Row: ")
+                                    dodgeCol = int(input("Dodge Col: "))
+                                    if [dodgeRow,dodgeCol] in avail:
+                                        check = 1
+                                        roll = random.randrange(1,7)
+                                        if roll == 1:
+                                            key = "p2_" + x[1]
+                                            pieces[key] = [dodgeRow,dodgeCol]
+                                            decrease_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
+                                            getattr(player2,x[1]).pos = [dodgeRow,dodgeCol]
+                                            increase_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
+                                        else:
+                                            p2_dead.append(x[1])
+                    else:
+                        player2.health -= 1
+                else:
+                    print("Player1's", x[0], "was unsuccessful in its attack")
+
+        else:
+            round+=1
+            for x in battles[1]:
+                roll = random.randrange(1,7)
+                nerf = 0
+                buff = 0
+                if getattr(player2,x[0]).pos == player1.jammer.pos and p1_jam == 1:
+                    nerf = 2
+                    # successful atk roll
+                if x[1] == "carrier" and x[0] == "bomber":
+                    buff = 4
+                print("player2's",x[0]," rolled a ",roll, " and needed below or equal to a ", getattr(player1,x[0]).combat_val - nerf+buff)
+                if roll <= getattr(player1,x[0]).combat_val - nerf + buff:
+                    if x[1] != "carrier":
+                        avail = evade(turn,getattr(player1,x[1]).pos)
+
+                        if len(avail) == 0 and getattr(player1,x[1]).combat_val == 0:
+                            p1_dead.append(x[1])
+                        elif len(avail) != 0:
+                            dod = True
+                            if getattr(player1,x[1]).combat_val != 0:
+                                ans = input("Evade?")
+                                if ans == "no":
+                                    dod = False
+                                    p1_dead.append(x[1])
+                            if dod:
+                                check = 0
+                                while check == 0:
+                                    print("Dodging for player1's ", x[1])
+                                    dodgeRow = input("Dodge Row: ")
+                                    dodgeCol = int(input("Dodge Col: "))
+                                    if [dodgeRow,dodgeCol] in avail:
+                                        check = 1
+                                        roll = random.randrange(1,7)
+                                        if roll == 1:
+                                            key = "p1_" + x[1]
+                                            pieces[key] = [dodgeRow,dodgeCol]
+                                            decrease_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
+                                            getattr(player1,x[1]).pos = [dodgeRow,dodgeCol]
+                                            increase_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
+                                        else:
+                                            p1_dead.append(x[1])
+                    else:
+                        player1.health -= 1
+                else:
+                    print("Player2's", x[0]," unsuccessful in its attack")
+
+        if turn == 1:
+            turn = 2
+        else:
+            turn = 1
+
+        if round == 2:
+            done = 1
+
+    for x in p1_dead:
+        key = "p1_" + x
+        pieces[key] = ["E",1]
+        decrease_unit(getattr(player1,x).pos[0],getattr(player1,x).pos[1])
+        getattr(player1,x).pos = ["E",1]
+        increase_unit(getattr(player1,x).pos[0],getattr(player1,x).pos[1])
+
+    for x in p2_dead:
+        key = "p2_" + x
+        pieces[key] = ["E",5]
+        decrease_unit(getattr(player2,x).pos[0],getattr(player2,x).pos[1])
+        getattr(player2,x).pos = ["E",5]
+        increase_unit(getattr(player2,x).pos[0],getattr(player2,x).pos[1])
+
+    return [len(p1_dead),len(p2_dead)]
+
+
 
 
 board = [r1, r2, r3, r4, r5]
@@ -501,20 +653,34 @@ print("NOTE: Player 1 will be respesented with an A\n Player 2 will be represent
 printBoard(board)
 
 gameState = 1
-turn = 1
+turn = 0
+round = 1
 oneUnits = 0
 twoUnits = 0
 print("You can now generate moveable units! Their names are tanker, comms, fighter1, fighter2,jammer, and bomber!\nThe Players themselves can not move\n")
 
+check = 0
+while check == 0:
+    roll1 = random.randrange(1,7)
+    roll2 = random.randrange(1,7)
+    if roll1 != roll2:
+        check = 1
+        if roll1 < roll2:
+            turn = 2
+        else:
+            turn = 1
+
 while gameState == 1:
-    possible = ["A", "B", "C", "D"]
-    if turn ==1:
+    temp = 0
+    if turn == 1:
         temp = oneUnits
     else:
         temp = twoUnits
 
-    print("Player",turn,"currently has",temp, "units in the field","\nCommands are as follows.\ngen - make a unit\nmove - move unit\nquit - end demo\nshow - display board format\nhelp - display commands\n")
+    possible = ["A", "B", "C", "D"]
 
+
+    print("Player",turn,"currently has",temp, "units in the field","\nCommands are as follows.\ngen - make a unit\nmove - move unit\nquit - end demo\nshow - display board format\nhelp - display commands\n")
     command = input("Please input a command: ")
     if command == "help":
         print("gen - make a unit\nmove - move unit\nquit - end demo\nshow - display board format\nhelp - display commands\n")
@@ -537,23 +703,25 @@ while gameState == 1:
             continue
         column = int(input("Input a generation column: "))
         if turn == 1:
-            confirm = genUnit(getattr(player1,name).pos,row,column)
+            confirm = genUnit(turn,getattr(player1,name).pos,row,column)
             if confirm:
                 key = "p1_" + name
                 pieces[key] = [row,column]
                 getattr(player1,name).pos = [row,column]
                 oneUnits +=1
             else:
+                print("failed to gen player1")
                 printBoard(board)
                 continue
         else:
-            confirm = genUnit(getattr(player2,name).pos,row,column)
+            confirm = genUnit(turn,getattr(player2,name).pos,row,column)
             if confirm:
                 key = "p2_" + name
                 pieces[key] = [row,column]
                 getattr(player2,name).pos = [row,column]
                 twoUnits +=1
             else:
+                print("failed to gen player2")
                 printBoard(board)
                 continue
 
@@ -585,88 +753,6 @@ while gameState == 1:
             else:
                 printBoard(board)
                 continue
-
-    elif command == "attack":
-        nerfed = 0
-        row = input("Input Target Tile Row: ")
-        if row == "E":
-            print("invalid row.... You can only move a unit to rows A,B,C, or D")
-            printBoard(board)
-            continue
-        column = input("Input Target Tile Column: ")
-        print("Enemy Units on tile: " + reveal(row,int(column)))
-        if turn == 1:
-            name = input("Choose a target: ")
-            launcher = input("Choose attacker: ")
-
-            if p2_jam == 1 and getattr(player1,launcher).pos == p2.jammer.pos:
-                nerfed = 2
-
-            target_death = False
-            launcher_death = False
-            p1_atk = getattr(player1,launcher).combat_val - nerfed
-            p1_roll = random.randrange(1,7)
-            if p1_roll <= p1_atk:
-                target_death = True
-                twoUnits-=1
-                decrease_unit(getattr(player2,name).pos[0],getattr(player2,name).pos[1])
-                getattr(player2,name).pos = ["E",5]
-                pieces["p2_"+name] = [5,5]
-                increase_unit("E",5)
-
-            p2_atk = getattr(player2,name).combat_val
-            p2_roll = random.randrange(1,7)
-            if p2_roll <= p2_atk:
-                launcher_death = True
-                oneUnits-=1
-                decrease_unit(getattr(player1,launcher).pos[0],getattr(player1,launcher).pos[1])
-                getattr(player1,launcher).pos = ["E",1]
-                pieces["p1_"+launcher] = [5,1]
-                increase_unit("E",1)
-
-            if launcher_death and target_death:
-                print("Both units were destroyed")
-            elif launcher_death:
-                print("Your attacking unit failed to accomplish the mission")
-            elif target_death:
-                print("Your attack was successful")
-            elif target_death == False and launcher_death == False:
-                print("Both aircraft were unsuccessful in their attacks")
-        else:
-            name = input("Choose a target: ")
-            launcher = input("Choose attacker: ")
-            if p1_jam == 1 and getattr(player2,launcher).pos == player1.jammer.pos:
-                nerfed = 2
-            target_death = False
-            launcher_death = False
-            p2_atk = getattr(player2,launcher).combat_val - nerfed
-            p2_roll = random.randrange(1,7)
-            if p2_roll <= p2_atk:
-                target_death = True
-                oneUnits-=1
-                decrease_unit(getattr(player1,name).pos[0],getattr(player1,name).pos[1])
-                getattr(player1,name).pos = ["E",1]
-                pieces["p1_"+name] = [5,1]
-                increase_unit("E",1)
-
-            p1_atk = getattr(player1,name).combat_val
-            p1_roll = random.randrange(1,7)
-            if p1_roll <= p1_atk:
-                launcher_death = True
-                twoUnits-=1
-                decrease_unit(getattr(player2,launcher).pos[0],getattr(player2,launcher).pos[1])
-                getattr(player2,launcher).pos = ["E",5]
-                pieces["p2_"+launcher] = [5,5]
-                increase_unit("E",5)
-
-            if launcher_death and target_death:
-                print("Both units were destroyed")
-            elif launcher_death:
-                print("Your attacking unit failed to accomplish the mission")
-            elif target_death:
-                print("Your attack was successful")
-            elif target_death == False and launcher_death == False:
-                print("Both aircraft were unsuccessful in their attacks")
 
     elif command == "regen":
         name = input("Input unit to be regenerated: ")
@@ -725,23 +811,53 @@ while gameState == 1:
 
     elif command == "evade":
         unit = input("unit to move: ")
-        evade(turn, unit)
+        print(evade(turn,unit))
     elif command == "stall":
         pass
+    elif command == "p":
+        print(pieces)
+        continue
     else:
         print("Invalid Command...Returning to start of turn\n")
         printBoard(board)
         continue
 
+
+    printBoard(board)
+
     if turn == 1:
         turn = 2
     else:
         turn = 1
+
+    if round == 1:
+        round = 2
+    else:
+        round = 1
         des = check_fuel()
         oneUnits -= des[0]
         twoUnits -= des[1]
-
-        detect_combat()
-
-
-    printBoard(board)
+        dead = detect_combat(turn)
+        oneUnits -= dead[0]
+        twoUnits -= dead[1]
+        print()
+        printBoard(board)
+        check = 0
+        while check == 0:
+            roll1 = random.randrange(1,7)
+            roll2 = random.randrange(1,7)
+            if roll1 != roll2:
+                check = 1
+                if roll1 < roll2:
+                    turn = 2
+                else:
+                    turn = 1
+        if player1.health == 0 and player2.health != 0:
+            gameState = 0
+            print("Player2 wins!")
+        elif player1.health != 0 and player2.health == 0:
+            gameState = 0
+            print("Player1 wins!")
+        elif player1.health == 0 and player2.health == 0:
+            gameState = 0
+            print("Match ended in a draw")

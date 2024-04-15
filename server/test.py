@@ -308,11 +308,17 @@ def jam(turn):
         roll = random.randrange(0,7)
         if roll <= 4:
             p1_jam = 1
+            print("feedback:The Blue Player rolled a", roll, "so the jammer is activated!:")
+        else:
+            print("feedback:The Blue Player rolled a", roll, "so the jammer was not activated.:")
 
     else:
         roll = random.randrange(0,7)
         if roll <= 4:
             p2_jam = 1
+            print("feedback:The Red Player rolled a", roll, "so the jammer is activated!:")
+        else:
+            print("feedback:The Red Player rolled a", roll, "so the jammer was not activated.:")
 
 def check_fuel():
     p1_stuff = list(pieces.keys())[0:6]
@@ -337,7 +343,7 @@ def check_fuel():
             pieces[x] = ["E",1]
             getattr(player1,x[3:]).pos = ["E",1]
             p1_des +=1
-            # print(x, " is out of its fuel range!\n")
+            print("feedback:", x, " is out of its fuel range!:")
 
 
     for x in p2_stuff:
@@ -357,7 +363,7 @@ def check_fuel():
             pieces[x] = ["E",5]
             getattr(player2,x[3:]).pos = ["E",5]
             p2_des +=1
-            # print(x, " is out of its fuel range!\n")
+            print("feedback:", x, " is out of its fuel range!:")
     return (p1_des,p2_des)
 
 def evade(turn, unitPos):
@@ -469,7 +475,7 @@ def resolve(turn,battles):
                             if len(x) > 1:
                                 check = 0
                                 while check == 0:
-                                    tar = input("combat:P," + str(turn) +"\n")
+                                    tar = input("combat:P," + str(turn) + "|" + x[0] + "\n")
                                     if tar in x:
                                         bat = [x[0],tar]
                                         p1_bats.append(bat)
@@ -493,7 +499,7 @@ def resolve(turn,battles):
                             if len(x) > 1:
                                 check = 0
                                 while check == 0:
-                                    tar = input("combat:P," + str(turn) +"\n")
+                                    tar = input("combat:P," + str(turn) + "|" + x[0] + "\n")
                                     if tar in x:
                                         bat = [x[0],tar]
                                         p2_bats.append(bat)
@@ -524,94 +530,110 @@ def fight(turn,battles):
         if turn == 1:
             round+=1
             for x in battles[0]:
-                roll = random.randrange(1,7)
-                nerf = 0
-                buff = 0
-                if getattr(player1,x[0]).pos == player2.jammer.pos and p2_jam == 1:
-                    nerf = 2
-                    # successful atk roll
-                if x[1] == "carrier" and x[0] == "bomber":
-                    buff = 4
-                # print("player1's",x[0]," rolled a ",roll, " and needed below or equal to a ", getattr(player1,x[0]).combat_val - nerf+buff, '\n')
-                if roll <= getattr(player1,x[0]).combat_val - nerf + buff:
-                    if x[1] != "carrier":
-                        avail = evade(turn,getattr(player2,x[1]).pos)
+                escape = 0
+                avail = evade(turn,getattr(player2,x[1]).pos)
+                if len(avail) != 0:
+                    dod = True
+                    ans = input("dodge:"+str(2))
+                    if ans == "no":
+                        dod = False
+                    if dod:
+                        check = 0
+                        while check == 0:
+                            weave = input("evade:"+str(2))
+                            weave = weave.split(",")
+                            dodgeRow = weave[0]
+                            dodgeCol = int(weave[1])
+                            if [dodgeRow,dodgeCol] in avail:
+                                check = 1
+                                roll = random.randrange(1,7)
+                                if roll == 1:
+                                    print("feedback:Player 2 rolled a", roll, "so they can attempt to evade!:")
+                                    key = "p2_" + x[1]
+                                    pieces[key] = [dodgeRow,dodgeCol]
 
-                        if len(avail) == 0 and getattr(player2,x[1]).combat_val == 0:
-                            p2_dead.append(x[1])
-                        elif len(avail) != 0:
-                            dod = True
-                            if getattr(player2,x[1]).combat_val != 0:
-                                ans = input("Evade?")
-                                if ans == "no":
-                                    dod = False
-                                    p2_dead.append(x[1])
-                            if dod:
-                                check = 0
-                                while check == 0:
-                                    weave = input("evade:"+str(2))
-                                    weave = weave.split(",")
-                                    dodgeRow = weave[0]
-                                    dodgeCol = int(weave[1])
-                                    if [dodgeRow,dodgeCol] in avail:
-                                        check = 1
-                                        roll = random.randrange(1,7)
-                                        if roll == 1:
-                                            key = "p2_" + x[1]
-                                            pieces[key] = [dodgeRow,dodgeCol]
-                                            decrease_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
-                                            getattr(player2,x[1]).pos = [dodgeRow,dodgeCol]
-                                            increase_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
-                                        else:
-                                            p2_dead.append(x[1])
-                    else:
-                        player2.health -= 1
+                                    decrease_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
+                                    getattr(player2,x[1]).pos = [dodgeRow,dodgeCol]
+                                    increase_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
+
+                                    escape = 1
+                                else:
+                                    print("feedback:Player 2 rolled a", roll, " and needed a 1 so they cannot evade.:")
+
+                if escape != 1:
+                    roll = random.randrange(1,7)
+                    nerf = 0
+                    buff = 0
+                    if getattr(player1,x[0]).pos == player2.jammer.pos and p2_jam == 1:
+                        nerf = 2
+                        # successful atk
+                    if x[1] == "carrier" and x[0] == "bomber":
+                        buff = 4
+                    print("feedback:player1's",x[0]," rolled a ",roll, " and needed below or equal to a", getattr(player1,x[0]).combat_val - nerf+buff, ':')
+                    if roll <= getattr(player1,x[0]).combat_val - nerf + buff:
+                        if x[1] != "carrier":
+                            decrease_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
+                            increase_unit("E",5)
+
+                            key = "p2_" + x[1]
+                            pieces[key] = ["E",5]
+                        else:
+                            player2.health -= 1
 
         else:
             round+=1
             for x in battles[1]:
-                roll = random.randrange(1,7)
-                nerf = 0
-                buff = 0
-                if getattr(player2,x[0]).pos == player1.jammer.pos and p1_jam == 1:
-                    nerf = 2
-                    # successful atk roll
-                if x[1] == "carrier" and x[0] == "bomber":
-                    buff = 4
-                # print("player2's",x[0]," rolled a ",roll, " and needed below or equal to a ", getattr(player1,x[0]).combat_val - nerf+buff,'\n')
-                if roll <= getattr(player1,x[0]).combat_val - nerf + buff:
-                    if x[1] != "carrier":
-                        avail = evade(turn,getattr(player1,x[1]).pos)
+                escape = 0
+                avail = evade(turn,getattr(player1,x[1]).pos)
+                if len(avail) != 0:
+                    dod = True
+                    ans = input("dodge:"+str(1))
+                    if ans == "no":
+                        dod = False
+                    if dod:
+                        check = 0
+                        while check == 0:
+                            weave = input("evade:"+str(1))
+                            weave = weave.split(",")
+                            dodgeRow = weave[0]
+                            dodgeCol = int(weave[1])
+                            if [dodgeRow,dodgeCol] in avail:
+                                check = 1
+                                roll = random.randrange(1,7)
+                                if roll == 1:
+                                    print("feedback:Player 1 rolled a", roll, "so they can attempt to evade!:")
+                                    key = "p1_" + x[1]
+                                    pieces[key] = [dodgeRow,dodgeCol]
 
-                        if len(avail) == 0 and getattr(player1,x[1]).combat_val == 0:
-                            p1_dead.append(x[1])
-                        elif len(avail) != 0:
-                            dod = True
-                            if getattr(player1,x[1]).combat_val != 0:
-                                ans = input("Evade?")
-                                if ans == "no":
-                                    dod = False
-                                    p1_dead.append(x[1])
-                            if dod:
-                                check = 0
-                                while check == 0:
-                                    weave = input("evade:"+str(1))
-                                    weave = weave.split(",")
-                                    dodgeRow = weave[0]
-                                    dodgeCol = int(weave[1])
-                                    if [dodgeRow,dodgeCol] in avail:
-                                        check = 1
-                                        roll = random.randrange(1,7)
-                                        if roll == 1:
-                                            key = "p1_" + x[1]
-                                            pieces[key] = [dodgeRow,dodgeCol]
-                                            decrease_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
-                                            getattr(player1,x[1]).pos = [dodgeRow,dodgeCol]
-                                            increase_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
-                                        else:
-                                            p1_dead.append(x[1])
-                    else:
-                        player1.health -= 1
+                                    decrease_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
+                                    getattr(player1,x[1]).pos = [dodgeRow,dodgeCol]
+                                    increase_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
+
+                                    escape = 1
+                                else:
+                                    print("feedback:Player 1 rolled a", roll, "and needed a 1 so they cannot evade.:")
+                            else:
+                                print("feedback:Player 1 attempted to move to an invalid tile for evasion.:")
+
+                if escape != 1:
+                    roll = random.randrange(1,7)
+                    nerf = 0
+                    buff = 0
+                    if getattr(player2,x[0]).pos == player1.jammer.pos and p1_jam == 1:
+                        nerf = 2
+                        # successful atk roll
+                    if x[1] == "carrier" and x[0] == "bomber":
+                        buff = 4
+                    print("feedback:player2's",x[0]," rolled a ",roll, " and needed below or equal to a", getattr(player1,x[0]).combat_val - nerf+buff,':')
+                    if roll <= getattr(player1,x[0]).combat_val - nerf + buff:
+                        if x[1] != "carrier":
+                            decrease_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
+                            increase_unit("E",1)
+
+                            key = "p1_" + x[1]
+                            pieces[key] = ["E",1]
+                        else:
+                            player1.health -= 1
 
         if turn == 1:
             turn = 2
@@ -636,8 +658,6 @@ def fight(turn,battles):
         increase_unit(getattr(player2,x).pos[0],getattr(player2,x).pos[1])
 
     return [len(p1_dead),len(p2_dead)]
-
-
 
 
 board = [r1, r2, r3, r4, r5]
@@ -883,10 +903,30 @@ while gameState == 1:
         des = check_fuel()
         oneUnits -= des[0]
         twoUnits -= des[1]
+
+        x = pieces.keys()
+
+        k = "end:"
+        for n,i in enumerate(x):
+            temp = pieces.get(i)
+            if type(temp[0]) == "str":
+                row = temp[0]
+            else:
+                row = str(temp[0])
+            col = str(temp[1])
+            p = i[:2]
+            u = i[3:]
+            if n!= len(x)-1:
+                k+=p+","+u+","+row+","+col+"|"
+            else:
+                k+=p+","+u+","+row+","+col
+        print(k+'\n')
+
+
         dead = detect_combat(turn)
         oneUnits -= dead[0]
         twoUnits -= dead[1]
-       # print()
+        # print()
         # printBoard(board)
         check = 0
         while check == 0:
@@ -900,6 +940,7 @@ while gameState == 1:
                     turn = 1
 
         x = pieces.keys()
+
         k = "end:"
         for n,i in enumerate(x):
             temp = pieces.get(i)

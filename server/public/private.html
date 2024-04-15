@@ -10,7 +10,21 @@
     body {
       margin: 0;
       padding: 0;
+      font-family:"Allerta Stencil" ;
+
     }
+    .center {
+       text-align: center;
+
+    }
+     
+    .my-text {
+    font-size: 12px;
+    font-family:"Allerta Stencil" ;
+    text-align:left;
+
+    }
+
 
     /* Create two unequal columns that floats next to each other */
     .column {
@@ -32,6 +46,25 @@
       display: table;
       clear: both;
     }
+
+        /* Style for the instruction module */
+    .instruction-module {
+        display: none;
+        position: fixed;
+        overflow-y: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: gray;
+        padding: 20px;
+        border: 1px solid black;
+        border-radius: 5px;
+        z-index: 1000;
+        max-width: 500px;
+        max-height: 400px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family:"Allerta Stencil" ;
+    }
       </style>
 </head>
 <body>
@@ -43,10 +76,14 @@
   </header>
   <div class="row">
     <div class="column left">
-      <h2>Game Board</h2>
+      <h2 class = "center">Game Board</h2>
+      
+      <!-- Clickable image -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/150px-Blue_question_mark_icon.svg.png" margin-left = "auto" margin-right = "auto" alt="Question Mark" width="25" height="25"class="question-icon" onclick="toggleInstructions()">
+
       <p><ul class="hex-grid__list">
         <li class="hex-grid__item">
-            <div class="hex-grid__content" id="A,1" onclick="javascript:clicked('A,1')" style="background-color: #0b54f2d8">
+            <div class="hex-grid__content" id="A,1" onclick="javascript:clicked('A,1')" style="background-color: #2e28d1ed">
             <img src="bluecarrier.png" width="60">
             </div>
         </li>
@@ -127,34 +164,29 @@
     <div class="column right" style="background-color:#5487bd4c;">
       <h2>Controls</h2>
       <p>  <form id="input-form">
-        <label id="inputLabel" for="message">Enter Join Code:</label>
+        <label id="inputLabel" for="message">Send Message:</label>
         <input type="text" id="message" name="message">
         <input type="submit" value="Send">
       </form>
       <!-- <form id="die-roll">
         <input type="submit" value="Roll">
       </form> -->
-      <br>
-      <div>
-        <input id="creater" type="submit" value="Create">
-        <input id="joiner" type="submit" value="Join">
+      <div id="join-buttons">
+        <br>
+        <input id="creater" type="submit" value="Create Join Code">
         <input id="autojoiner" type="submit" value="AutoJoin">
+        <br><br>
+        <label for="join">Enter Join Code:</label>
+        <input type="text" id="join" name="join">
+        <input id="joiner" type="submit" value="Join">
       </div>
       <br>
-      <form id="select-move">
-        <label for="moves">Choose an Action:</label>
-        <select name="moves" id="moves">
-          <option value="gen">Generate</option>
-          <option value="regen">Regenerate</option>
-          <option value="move">Move</option>
-          <option value="jam">Jam</option>
-          <option value="relocate">Relocate</option>
-        </select>
-        <input type="submit" value="Select Move">
-      </form>
+      <form id="select-move"></form>
       <form id="select-unit"></form>
       <form id="select-attack"></form>
+      <form id="evasion"></form>
       <div id="select-tile"></div>
+      <form id="this-tile"></form>
       <form id="ender">
       </form>
       <div id="lobbyID">Lobby ID:</div>
@@ -168,10 +200,56 @@
       <!-- <div id="rolls"></div> -->
       <div id="unit_msg"></div></p>
     </div>
+    <div>
+      <img src="numbers.jpg" width="25%">
+      <img src="units.jpg" width="10%">
+    </div>
   </div>
   <br><br><br>
 
+  <!-- Instruction module -->
+  <div id="instruction-module" class="instruction-module">
+    <h2>Here's how to play:</h2>
+    
+    
+                
+        <p class="my-text"><b>Objective</b>: Win by destroying the opposing carrier by delivering 2 hits. Place a damage counter on the carrier for each successful hit.</p>
+        
+        <p class="my-text"> <b>Order of Play</b>: Each turn, players roll 1d6. 
+        Higher number has initiative and goes first. Each player does ONE of the following actions: 
+        <li class="my-text"><b>Generate one unit</b>. Place a unit adjacent to or on top of your carrier. </li> 
+        <li class="my-text"><b>Move one unit one hex</b>. Units can stack with no limit, but this action only moves one unit.</li>
+        <li class="my-text"><b>Activate a unit's special ability</b>.</li>
+        <li class="my-text"><b>Regenerate unit</b>. Roll 1d6. If the result is 5 or less, place one destroyed unit adjacent or 
+        on top of the carrier.</li></p>
+        
+        <p class="my-text"><b>Combat</b>: After both players have finished their actions, combat occurs automatically. The initiative player chooses combat order. Each unit may only engage in combat ONCE per turn. 
+         there are multiple eligible targets within range, then the attacker chooses its target for combat.</p>
+                 
+         <p class="my-text"><b>Evasion</b>: The Defender may Evade. Roll 1d6. On a 1, move Defender to a hex without an enemy unit with a Combat Value and the Engagement ends.
+         Otherwise, continue Engagement. If it cannot retreat safely, destroy the unit.</p> 
+         
+         <p class="my-text"><b>Resolving Combat Engagements</b>: Select one unit as the Attacker and one unit within its Combat Range as the Defender. If the Attacker and Defender are engaging one another, 
+         roll dice simultaneously. If the roll is equal to or less than the unit's Combat Value, the opposing unit is destroyed (remove from the board and place in the appropriate Regeneration Box). All units can only take one hit. In a turn, a unit destroyed
+          in combat may still roll for its own combat against its target - before being sent to the Regeneration Box. ie.; If A destroys B, and B is targeting C - then B can still roll to destroy C before going to the Regeneration Box. 
+        </p>
+        <p class="my-text"><b>Special Rules</b>:
+           A unit further from a fuel source than its Fuel Range is destroyed at the end of the turn. Available fuel sources: Tanker (TKR) or the carrier. If a unit has (c) for its Fuel Range, it does not need a fuel source. When counting range for combat or 
+           fuel, the occupied hex is a range of zero and the adjacent hex is a range of 1. A Bomber (BMR) has a combat value of 1 against all units except the opponent's carrier.</p> 
+        <p class="my-text"><b>C2 Special Ability</b>: Select up to 2 of your units within the Special Effect Range. 
+           Move the selected units one hex each. 
+         <p class="my-text"><b>Jam Special Ability</b>: Roll 1d6. On a 4 or less, reduces all enemy combat values by 2 against units in its hex. This ability is automatic when enemy units engages in combat against its hex. Roll for this ability 
+           prior to the Attacker's roll.</p>
+           
+          <p class="my-text"><b>Glossary</b>: 1d6 - one six-sided die (Image of d6) <br>Unit - one of the six aircraft available to each player</p></p>
+
+    
+    <button onclick="closeInstructions()">Close</button>
+  </div>
+
   <script>
+    let color = "";
+    let tileSelected = "";
     const webSocket = new WebSocket('ws://localhost:8082/');
     const turnMsg = {
       type: "end of turn",
@@ -200,16 +278,21 @@
            msg.text + "<br>";
            document.getElementById('inputLabel').innerHTML =
            "Enter Message:";
+           document.getElementById('inputLabel').innerHTML =
+           "Enter Message:";
            break;
          case "player-num":
           if(msg.text.includes("blue")){
+            color = "#2e28d1ed"
             document.getElementById("top").innerHTML = '<div style="text-align:center; color:white; background-color: #2e28d1ed; width:100%"><h1>C A L L S I G N</h1><h2>You are the ' + msg.text + ' player!</h2></div>';
           }
           else if(msg.text.includes("red")){
+            color = "rgba(227, 20, 20, 0.861)"
             document.getElementById("top").innerHTML = '<div style="text-align:center; color:white; background-color: #ea0a0aed; width:100%"><h1>C A L L S I G N</h1><h2>You are the ' + msg.text + ' player!</h2></div>';
           }
             break;
          case "opp":
+          
           document.getElementById('messages').innerHTML +=
            "Opponent Joined <br>";
            opp();
@@ -252,17 +335,35 @@
               '<img src="'+location[0]+location[1]+'.png" width="30">';
             }
           }
+          // resets the tile colors
+          if(tileSelected == "D,6"){
+            document.getElementById(tileSelected).style = "background-color: rgba(227, 20, 20, 0.861)";
+          }
+          else if(tileSelected == "A,1"){
+            document.getElementById(tileSelected).style = "background-color:  #2e28d1ed";
+          }
+          else{
+            document.getElementById(tileSelected).style = "background-color: grey";
+          }
           break;
+          case "feedback":
+            document.getElementById('messages').innerHTML += msg.text + "<br>";
+            break;
           case "combat":
-              document.getElementById('select-attack').innerHTML =
-              '<label for="attack">Choose a Unit to Attack:</label><select name="attack" id="attack"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option><option value="carrier">Carrier</option></select><input type="submit" value="Select">';
-          document.getElementById('messages').innerHTML += msg.text;
-           break;
-           case "evade":
+            window.alert(msg.text);
+            let unit = msg.text.split('|')[1]
+            document.getElementById('select-attack').innerHTML =
+            '<label for="attack">Choose a Unit for your ' + unit + 'to Attack:</label><select name="attack" id="attack"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option><option value="carrier">Carrier</option></select><input type="submit" value="Select">';
+            break;
+          case "dodge":
+            document.getElementById('evasion').innerHTML =
+           '<label for="evadeyn">Do you want to evade?</label><select name="evadeyn" id="evadeyn"><option value="yes">Yes</option><option value="no">No</option></select><input type="submit" value="Select">';
+            break;
+          case "evade":
            document.getElementById('select-tile').innerHTML = "You are in attacking range of an enemy unit! Select a tile to evade to.";
            evade = 1;
            break;
-           case "victor":
+          case "victor":
            var winner = msg.text.split(":")
            window.alert("Player "+winner+ " won the game");
       }
@@ -271,6 +372,26 @@
       console.log("We are connected");
     });
     function clicked(name){
+      if(evade == 1 || move ==1){
+        if(tileSelected == "D,6"){
+          document.getElementById(tileSelected).style = "background-color: rgba(227, 20, 20, 0.861)";
+        }
+        else if(tileSelected == "A,1"){
+          document.getElementById(tileSelected).style = "background-color:  #2e28d1ed";
+        }
+        else if(tileSelected != ""){
+          document.getElementById(tileSelected).style = "background-color: grey";
+        }
+        document.getElementById(name).style = "background-color: " + color;
+        tileSelected = name
+        document.getElementById('this-tile').innerHTML = '<input type="submit" value="Select this Tile">';
+      }
+    }
+    function setTile(event){
+      choose(tileSelected);
+      document.getElementById('this-tile').innerHTML = "";
+    }
+    function choose(name){
       if(evade == 1){
         const inputMessage = {
         type: "evade",
@@ -292,7 +413,7 @@
            '<label for="units">Choose a Unit:</label><select name="units" id="units"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option></select><input type="submit" value="Select">';
            relnum = 1
           }
-          }
+        }
       
       turnMsg.text += name;
       document.getElementById('select-tile').innerHTML = "";
@@ -319,13 +440,20 @@
       event.preventDefault();
     }
     function join(event) {
-      const inputMessage = {
-        type: "join",
-        text: document.getElementById('message').value,
-      };
-      webSocket.send(JSON.stringify(inputMessage));
-      inputMessage.value = "";
-      event.preventDefault();
+      if(document.getElementById('join').value==""){
+        window.alert("Error: Enter a Join Code");
+      }
+      else{
+        const inputMessage = {
+          type: "join",
+          text: document.getElementById('join').value,
+        };
+        webSocket.send(JSON.stringify(inputMessage));
+        inputMessage.value = "";
+        document.getElementById('join-buttons').innerHTML = "";
+        document.getElementById('select-move').innerHTML = '<label for="moves">Choose an Action:</label><select name="moves" id="moves"><option value="gen">Generate</option><option value="regen">Regenerate</option><option value="move">Move</option><option value="jam">Jam</option><option value="relocate">Relocate</option></select><input type="submit" value="Select Move">';
+        event.preventDefault();
+      }
     }
     function autojoin(event) {
       const inputMessage = {
@@ -334,6 +462,8 @@
       };
       webSocket.send(JSON.stringify(inputMessage));
       inputMessage.value = "";
+      document.getElementById('join-buttons').innerHTML = "";
+      document.getElementById('select-move').innerHTML = '<label for="moves">Choose an Action:</label><select name="moves" id="moves"><option value="gen">Generate</option><option value="regen">Regenerate</option><option value="move">Move</option><option value="jam">Jam</option><option value="relocate">Relocate</option></select><input type="submit" value="Select Move">';
       event.preventDefault();
     }
     function opp(event) {
@@ -343,6 +473,8 @@
       };
       webSocket.send(JSON.stringify(inputMessage));
       inputMessage.value = "";
+      document.getElementById('join-buttons').innerHTML = "";
+      document.getElementById('select-move').innerHTML = '<label for="moves">Choose an Action:</label><select name="moves" id="moves"><option value="gen">Generate</option><option value="regen">Regenerate</option><option value="move">Move</option><option value="jam">Jam</option><option value="relocate">Relocate</option></select><input type="submit" value="Select Move">';
       event.preventDefault();
     }
     function left(event) {
@@ -406,6 +538,16 @@
       document.getElementById('select-attack').innerHTML = "";
       event.preventDefault();
     }
+    function chooseEvade(event){
+      const inputMessage = {
+        type: "evadeyn",
+        text: document.getElementById('evadeyn').value,
+      };
+      webSocket.send(JSON.stringify(inputMessage));
+      inputMessage.value = "";
+      document.getElementById('evasion').innerHTML = "";
+      event.preventDefault();
+    }
     document.getElementById('input-form').addEventListener('submit', sendMessage);
     document.getElementById('joiner').addEventListener('click', join);
     document.getElementById('ender').addEventListener('submit', end);
@@ -413,7 +555,27 @@
     document.getElementById('creater').addEventListener('click', create);
     document.getElementById('select-move').addEventListener('submit', chooseMove);
     document.getElementById('select-unit').addEventListener('submit', chooseUnit);
+    document.getElementById('this-tile').addEventListener('submit', setTile);
     document.getElementById('select-attack').addEventListener('submit', chooseAttack);
+    document.getElementById('evasion').addEventListener('submit', chooseEvade);
+  </script>
+
+  <script>
+        // Function to toggle visibility of instruction module
+        function toggleInstructions() {
+            var instructionModule = document.getElementById("instruction-module");
+            if (instructionModule.style.display === "none" || instructionModule.style.display === "") {
+                instructionModule.style.display = "block";
+            } else {
+                instructionModule.style.display = "none";
+            }
+        }
+        
+        // Function to close instruction module
+        function closeInstructions() {
+            var instructionModule = document.getElementById("instruction-module");
+            instructionModule.style.display = "none";
+        }
   </script>
 </body>
 </html>

@@ -8,10 +8,10 @@
   --counter: 1;
   display: grid;
   list-style-type: none;
-  margin: 10;
-  padding: 10;
-  grid-template-columns: repeat(6, 90px);
-  grid-template-rows: repeat(8, 50px);
+  margin: 1%;
+  padding: 1%;
+  grid-template-columns: repeat(6, 15%);
+  grid-template-rows: repeat(8, 12.5%);
 }
 
 .hex-grid__item {
@@ -19,7 +19,7 @@
   grid-column: 1;
   grid-row: calc(var(--counter) + var(--counter));
   height: 0;
-  padding-bottom: 40%;
+  padding-bottom: 60%;
   padding-right: 60%;
 }
 .hex-grid__item:nth-of-type(6n + 1) {
@@ -60,10 +60,10 @@
   position: absolute;
   left: 0;
   top: 0;
-  height: 70%;
-  width: 75%;
+  height: 78%;
+  width: 63%;
   background-color: grey;
   -webkit-clip-path: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
           clip-path: polygon(75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%, 25% 0);
-  padding: 1.7rem 25%;
+  padding: 30%;
 }/*# sourceMappingURL=hex.css.map */
