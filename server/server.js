@@ -62,6 +62,12 @@ webserver.get("/p1comms.png", (req, res) => {
 webserver.get("/p2comms.png", (req, res) => {
     res.sendFile(dir + "p2comms.png");
   });
+webserver.get("/numbers.jpg", (req, res) => {
+res.sendFile(dir + "numbers.jpg");
+});
+webserver.get("/units.jpg", (req, res) => {
+res.sendFile(dir + "units.jpg");
+ });
 
 // Serve a 404 page on all other accessed routes, or redirect to specific page
 webserver.get("*", (req, res) => {
@@ -167,33 +173,47 @@ wss2.on('connection', ws => {
                     var result = lobbyDict.get(lobbyID)[4].split(':');
                     var full = lobbyDict.get(lobbyID)[4];
                     console.log(result)
+                    for(let i = 0; i < result.length; i++){
+                        if(result[i].includes("end")){
+                            sendMessage(lobbyDict.get(lobbyID)[1], "turn-result", result[i+1])
+                            sendMessage(lobbyDict.get(lobbyID)[2], "turn-result", result[i+1])
+                        }
+                        if(result[i].includes("combat")){
+                            player = result[i+1].split(',');
+                            console.log(result[i+1]);
+                            console.log("Me:" + self);
+                            if(parseInt(player[1].charAt(0))==1){
+                                sendMessage(lobbyDict.get(lobbyID)[1], "combat", result[i+1]);
+                            }
+                            else{
+                                console.log("for whatever reason");
+                                sendMessage(lobbyDict.get(lobbyID)[2], "combat", result[i+1]);
+                            }
+                        }
+                        if(result[i].includes("evade")){
+                            console.log(result[i+1]);
+                            console.log("self",self);
+                            if(parseInt(player[1].charAt(0))==1){
+                                sendMessage(lobbyDict.get(lobbyID)[2], "evade", result[i+1])
+                            }
+                            if(parseInt(player[1].charAt(0))==2){
+                                sendMessage(lobbyDict.get(lobbyID)[1], "evade", result[i+1])
+                            }
+                        }
+                        if(result[i].includes("dodge")){
+                            if(parseInt(player[1].charAt(0))==1){
+                                sendMessage(lobbyDict.get(lobbyID)[2], "dodge", result[i+1])
+                            }
+                            if(parseInt(player[1].charAt(0))==2){
+                                sendMessage(lobbyDict.get(lobbyID)[1], "dodge", result[i+1])
+                            }
+                        }
+                        if(result[i].includes("feedback")){
+                            sendMessage(lobbyDict.get(lobbyID)[1], "feedback", result[i+1])
+                            sendMessage(lobbyDict.get(lobbyID)[2], "feedback", result[i+1])
+                        }
+                    }
 
-                    if(result[0]=="end"){
-                        sendMessage(lobbyDict.get(lobbyID)[1], "turn-result", result[1])
-                        sendMessage(lobbyDict.get(lobbyID)[2], "turn-result", result[1])
-                    }
-                    if(result[0]=="combat"){
-                        player = result[1].split(',');
-                        console.log(result[1]);
-                        console.log("Me:" + self);
-                        if(parseInt(player[1].charAt(0))==1){
-                            console.log("here!");
-                            sendMessage(lobbyDict.get(lobbyID)[1], "combat", result[1]);
-                        }
-                        else{
-                            sendMessage(lobbyDict.get(lobbyID)[2], "combat", result[1]);
-                        }
-                    }
-                    if(result[0]=="evade"){
-                        console.log(result[1]);
-                        console.log("self",self);
-                        if(parseInt(player[1].charAt(0))==1){
-                            sendMessage(lobbyDict.get(lobbyID)[2], "evade", result[1])
-                        }
-                        if(parseInt(player[1].charAt(0))==2){
-                            sendMessage(lobbyDict.get(lobbyID)[1], "evade", result[1])
-                        }
-                    }
                     console.log("result:", result)
                     if(full.includes("victor")){
                       console.log("winning")
@@ -305,6 +325,12 @@ wss2.on('connection', ws => {
                 lobbyDict.get(lobbyID)[3].stdin.write(msg.text + '\n');
                 lobbyDict.get(lobbyID)[3].stdin.uncork();
             break;
+            case "evadeyn":
+                console.log("Evading y/n " + msg.text);
+                lobbyDict.get(lobbyID)[3].stdin.cork();
+                lobbyDict.get(lobbyID)[3].stdin.write(msg.text + '\n');
+                lobbyDict.get(lobbyID)[3].stdin.uncork();
+                break;
             case "attack":
                 console.log("Attacking " + msg.text);
                 lobbyDict.get(lobbyID)[3].stdin.cork();
@@ -357,3 +383,4 @@ wss2.on('connection', ws => {
         console.log('websocket error')
     }
 })
+
