@@ -406,14 +406,34 @@ def detect_combat(turn):
     p1_all = [x[3:] for x in p1_stuff]
     p1_atk = [p1_all[1],p1_all[4],p1_all[5]]
 
+    if p1_all[1] == ["E",1]:
+        p1_atk.remove(p1_all[1])
+
+    if p1_all[4] == ["E",1]:
+        p1_atk.remove(p1_all[4])
+
+    if p1_all[5] == ["E",1]:
+        p1_atk.remove(p1_all[5])
+
     p2_all = [x[3:] for x in p2_stuff]
     p2_atk = [p2_all[1],p2_all[4],p2_all[5]]
+
+    if p2_all[1] == ["E",5]:
+        p1_atk.remove(p2_all[1])
+
+    if p2_all[4] == ["E",5]:
+        p1_atk.remove(p2_all[4])
+
+    if p2_all[5] == ["E",5]:
+        p1_atk.remove(p2_all[5])
+
 
     p1_targs = []
     p2_targs = []
 
     for i in p1_atk:
         pos = getattr(player1,i).pos
+        # print(pos)
         if pos != [0,0] and pos != ["E",1]:
             ran = getattr(player1,i).combat_range
             targs = [i]
@@ -476,6 +496,7 @@ def resolve(turn,battles):
                                 check = 0
                                 while check == 0:
                                     tar = input("combat:P," + str(turn) + "|" + x[0] + "\n")
+                                    print(x)
                                     if tar in x:
                                         bat = [x[0],tar]
                                         p1_bats.append(bat)
@@ -524,6 +545,9 @@ def fight(turn,battles):
     p1_dead = []
     p2_dead = []
 
+    # print()
+    # printBoard(board)
+
     done = 0
     round = 0
     while done == 0:
@@ -558,7 +582,7 @@ def fight(turn,battles):
 
                                     escape = 1
                                 else:
-                                    print("feedback:Player 2 rolled a", roll, " and needed a 1 so they cannot evade.:")
+                                    print("feedback:Player 2 rolled a", roll, " and needed a 1 so they cannot evade and will be attacked.:")
 
                 if escape != 1:
                     roll = random.randrange(1,7)
@@ -574,6 +598,7 @@ def fight(turn,battles):
                         if x[1] != "carrier":
                             decrease_unit(getattr(player2,x[1]).pos[0],getattr(player2,x[1]).pos[1])
                             increase_unit("E",5)
+                            getattr(player2,x[1]).pos = ["E",5]
 
                             key = "p2_" + x[1]
                             pieces[key] = ["E",5]
@@ -629,6 +654,8 @@ def fight(turn,battles):
                         if x[1] != "carrier":
                             decrease_unit(getattr(player1,x[1]).pos[0],getattr(player1,x[1]).pos[1])
                             increase_unit("E",1)
+                            getattr(player1,x[1]).pos = ["E",1]
+
 
                             key = "p1_" + x[1]
                             pieces[key] = ["E",1]

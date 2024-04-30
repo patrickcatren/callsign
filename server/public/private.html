@@ -250,7 +250,7 @@
   <script>
     let color = "";
     let tileSelected = "";
-    const webSocket = new WebSocket('ws://localhost:8082/');
+    const webSocket = new WebSocket('wsis://callsign-wargame.com:8082/');
     const turnMsg = {
       type: "end of turn",
       text: "",
@@ -350,7 +350,6 @@
             document.getElementById('messages').innerHTML += msg.text + "<br>";
             break;
           case "combat":
-            window.alert(msg.text);
             let unit = msg.text.split('|')[1]
             document.getElementById('select-attack').innerHTML =
             '<label for="attack">Choose a Unit for your ' + unit + 'to Attack:</label><select name="attack" id="attack"><option value="fighter1">Fighter 1</option><option value="fighter2">Fighter 2</option><option value="bomber">Bomber</option><option value="tanker">Tanker</option><option value="jammer">Jammer</option><option value="comms">C2</option><option value="carrier">Carrier</option></select><input type="submit" value="Select">';
@@ -360,12 +359,15 @@
            '<label for="evadeyn">Do you want to evade?</label><select name="evadeyn" id="evadeyn"><option value="yes">Yes</option><option value="no">No</option></select><input type="submit" value="Select">';
             break;
           case "evade":
-           document.getElementById('select-tile').innerHTML = "You are in attacking range of an enemy unit! Select a tile to evade to.";
-           evade = 1;
+           if(msg.text=="1" || msg.text=="2"){
+            document.getElementById('select-tile').innerHTML = "You are in attacking range of an enemy unit! Select a tile to evade to.";
+            evade = 1;
+           }
            break;
           case "victor":
            var winner = msg.text.split(":")
            window.alert("Player "+winner+ " won the game");
+           break;
       }
     };
     webSocket.addEventListener("open", () => {
@@ -392,6 +394,7 @@
       document.getElementById('this-tile').innerHTML = "";
     }
     function choose(name){
+      document.getElementById('select-tile').innerHTML = "";
       if(evade == 1){
         const inputMessage = {
         type: "evade",
@@ -399,7 +402,6 @@
       };
       webSocket.send(JSON.stringify(inputMessage));
       inputMessage.value = "";
-      document.getElementById('select-tile').innerHTML = "";
       evade = 0;
       event.preventDefault();
       }

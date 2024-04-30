@@ -1,5 +1,19 @@
 const express = require('express');
-const { WebSocketServer } = require('ws')
+const Fs = require('fs');
+const ws = require('ws').Server;
+const https = require('https');
+
+//setting up secure websocket
+const wsHttpsServer = https.createServer({
+  key: Fs.readFileSync('/etc/letsencrypt/live/callsign-wargame.com/privkey.pem'),
+  cert: Fs.readFileSync('/etc/letsencrypt/live/callsign-wargame.com/fullchain.pem')
+}).listen(8082);
+const wss = new ws({
+  server: wsHttpsServer
+});
+
+
+
 const dir = `${__dirname}/public/`;
 const { spawn } = require('child_process');
 const webserver = express()
@@ -75,8 +89,6 @@ webserver.get("*", (req, res) => {
 });
 webserver.listen(8080, () => console.log(`Listening on ${8080}`))
 
-const wss2 = new WebSocketServer({ port: 8082 })
-
 //functions for rolls
 let rolls = {
     even: -1,
@@ -107,7 +119,7 @@ function sendMessage(clientID, type, text){
 }
 
 //private matchmaking
-wss2.on('connection', ws => {
+wss.on('connection', ws => {
     let self = 0;
     let clientID = clientIDcounter++;
     let lobbyID = -1;
@@ -186,26 +198,25 @@ wss2.on('connection', ws => {
                                 sendMessage(lobbyDict.get(lobbyID)[1], "combat", result[i+1]);
                             }
                             else{
-                                console.log("for whatever reason");
                                 sendMessage(lobbyDict.get(lobbyID)[2], "combat", result[i+1]);
                             }
                         }
                         if(result[i].includes("evade")){
                             console.log(result[i+1]);
                             console.log("self",self);
-                            if(parseInt(player[1].charAt(0))==1){
-                                sendMessage(lobbyDict.get(lobbyID)[2], "evade", result[i+1])
-                            }
-                            if(parseInt(player[1].charAt(0))==2){
+                            if(parseInt(result[i+1].charAt(0))==1){
                                 sendMessage(lobbyDict.get(lobbyID)[1], "evade", result[i+1])
+                            }
+                            if(parseInt(result[i+1].charAt(0))==2){
+                                sendMessage(lobbyDict.get(lobbyID)[2], "evade", result[i+1])
                             }
                         }
                         if(result[i].includes("dodge")){
-                            if(parseInt(player[1].charAt(0))==1){
-                                sendMessage(lobbyDict.get(lobbyID)[2], "dodge", result[i+1])
-                            }
-                            if(parseInt(player[1].charAt(0))==2){
+                            if(parseInt(result[i+1].charAt(0))==1){
                                 sendMessage(lobbyDict.get(lobbyID)[1], "dodge", result[i+1])
+                            }
+                            if(parseInt(result[i+1].charAt(0))==2){
+                                sendMessage(lobbyDict.get(lobbyID)[2], "dodge", result[i+1])
                             }
                         }
                         if(result[i].includes("feedback")){
